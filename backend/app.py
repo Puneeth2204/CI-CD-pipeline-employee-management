@@ -1,4 +1,4 @@
-from flask import Flask, jsonify
+from flask import Flask, jsonify, request
 from flask_cors import CORS
 import sqlite3
 
@@ -29,6 +29,30 @@ def get_employees():
     conn.close()
 
     return jsonify([dict(employee) for employee in employees])
+ 
+@app.route("/employees", methods=["POST"])
+def add_employee():
+
+    data = request.get_json()
+
+    name = data["name"]
+    department = data["department"]
+
+    conn = sqlite3.connect("../database/employees.db")
+    cursor = conn.cursor()
+
+    cursor.execute(
+        "INSERT INTO employees (name, department) VALUES (?, ?)",
+        (name, department)
+    )
+
+    conn.commit()
+
+    conn.close()
+
+    return jsonify({
+        "message": "Employee added successfully!"
+    }), 201
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5000)
