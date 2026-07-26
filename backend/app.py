@@ -54,5 +54,22 @@ def add_employee():
         "message": "Employee added successfully!"
     }), 201
 
+@app.route("/employees/<int:id>", methods=["DELETE"])
+def delete_employee(id):
+
+    conn = sqlite3.connect("../database/employees.db")
+
+    cursor = conn.cursor()
+
+    cursor.execute("DELETE FROM employees WHERE id = ?", (id,))
+
+    conn.commit()
+
+    conn.close()
+
+    return jsonify({
+        "message": "Employee deleted successfully!"
+    })
+
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5000)
