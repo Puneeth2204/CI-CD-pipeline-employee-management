@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react";
-import axios from "axios";
+import EmployeeCard from "./components/EmployeeCard";
+import EmployeeForm from "./components/EmployeeForm";
+import API from "./services/api";
 
 function App() {
   const [employees, setEmployees] = useState([]);
@@ -8,8 +10,7 @@ function App() {
   const [department, setDepartment] = useState("");
 
   useEffect(() => {
-    axios
-      .get("http://3.110.197.155:5000/employees")
+    API.get("/employees")
       .then((response) => {
         setEmployees(response.data);
       })
@@ -19,8 +20,7 @@ function App() {
   }, []);
 
 const addEmployee = () => {
-  axios
-    .post("http://3.110.197.155:5000/employees", {
+  API.post("/employees", {
       name: name,
       department: department,
     })
@@ -38,8 +38,7 @@ const addEmployee = () => {
 };
 
 const deleteEmployee = (id) => {
-  axios
-    .delete(`http://3.110.197.155:5000/employees/${id}`)
+  API.delete(`/employees/${id}`)
     .then(() => {
       return axios.get("http://3.110.197.155:5000/employees");
     })
@@ -62,13 +61,12 @@ const updateEmployee = (employee) => {
 
   if (!newName || !newDepartment) return;
 
-  axios
-    .put(`http://3.110.197.155:5000/employees/${employee.id}`, {
+  API.put(`/employees/${employee.id}`, {
       name: newName,
       department: newDepartment,
     })
     .then(() => {
-      return axios.get("http://3.110.197.155:5000/employees");
+      return API.get("/employees");
     })
     .then((response) => {
       setEmployees(response.data);
@@ -82,27 +80,13 @@ const updateEmployee = (employee) => {
     <div style={{ padding: "20px", fontFamily: "Arial" }}>
       <h1>Employee Management System</h1>
       
-      <input
-  type="text"
-  placeholder="Employee Name"
-  value={name}
-  onChange={(e) => setName(e.target.value)}
+      <EmployeeForm
+  name={name}
+  department={department}
+  setName={setName}
+  setDepartment={setDepartment}
+  addEmployee={addEmployee}
 />
-
-<br /><br />
-
-<input
-  type="text"
-  placeholder="Department"
-  value={department}
-  onChange={(e) => setDepartment(e.target.value)}
-/>
-
-<br /><br />
-
-<button onClick={addEmployee}>
-  Add Employee
-</button>
 
 <hr />  
     
@@ -110,23 +94,12 @@ const updateEmployee = (employee) => {
         <p>Loading employees...</p>
       ) : (
         employees.map((employee) => (
-  <div key={employee.id}>
-    <h3>{employee.name}</h3>
-
-    <p>Department: {employee.department}</p>
-
-    <button onClick={() => updateEmployee(employee)}>
-  Edit
-</button>
-
-{" "}
-
-<button onClick={() => deleteEmployee(employee.id)}>
-  Delete
-</button>
-
-    <hr />
-  </div>
+  <EmployeeCard
+    key={employee.id}
+    employee={employee}
+    onEdit={updateEmployee}
+    onDelete={deleteEmployee}
+/>
 ))
       )}
     </div>
