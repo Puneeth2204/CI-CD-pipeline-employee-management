@@ -51,6 +51,33 @@ const deleteEmployee = (id) => {
     });
 };
 
+const updateEmployee = (employee) => {
+
+  const newName = prompt("Enter new employee name:", employee.name);
+
+  const newDepartment = prompt(
+    "Enter new department:",
+    employee.department
+  );
+
+  if (!newName || !newDepartment) return;
+
+  axios
+    .put(`http://3.110.197.155:5000/employees/${employee.id}`, {
+      name: newName,
+      department: newDepartment,
+    })
+    .then(() => {
+      return axios.get("http://3.110.197.155:5000/employees");
+    })
+    .then((response) => {
+      setEmployees(response.data);
+    })
+    .catch((error) => {
+      console.error(error);
+    });
+};
+
   return (
     <div style={{ padding: "20px", fontFamily: "Arial" }}>
       <h1>Employee Management System</h1>
@@ -88,9 +115,15 @@ const deleteEmployee = (id) => {
 
     <p>Department: {employee.department}</p>
 
-    <button onClick={() => deleteEmployee(employee.id)}>
-      Delete
-    </button>
+    <button onClick={() => updateEmployee(employee)}>
+  Edit
+</button>
+
+{" "}
+
+<button onClick={() => deleteEmployee(employee.id)}>
+  Delete
+</button>
 
     <hr />
   </div>

@@ -71,5 +71,34 @@ def delete_employee(id):
         "message": "Employee deleted successfully!"
     })
 
+@app.route("/employees/<int:id>", methods=["PUT"])
+def update_employee(id):
+
+    data = request.get_json()
+
+    name = data["name"]
+    department = data["department"]
+
+    conn = sqlite3.connect("../database/employees.db")
+
+    cursor = conn.cursor()
+
+    cursor.execute(
+        """
+        UPDATE employees
+        SET name = ?, department = ?
+        WHERE id = ?
+        """,
+        (name, department, id),
+    )
+
+    conn.commit()
+
+    conn.close()
+
+    return jsonify({
+        "message": "Employee updated successfully!"
+    })
+
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5000)
