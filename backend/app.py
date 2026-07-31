@@ -16,7 +16,7 @@ def home():
 @app.route("/employees")
 def get_employees():
 
-    conn = sqlite3.connect("../database/employees.db")
+    conn = sqlite3.connect("database/employees.db")
 
     conn.row_factory = sqlite3.Row
 
@@ -38,7 +38,7 @@ def add_employee():
     name = data["name"]
     department = data["department"]
 
-    conn = sqlite3.connect("../database/employees.db")
+    conn = sqlite3.connect("database/employees.db")
     cursor = conn.cursor()
 
     cursor.execute(
@@ -57,7 +57,7 @@ def add_employee():
 @app.route("/employees/<int:id>", methods=["DELETE"])
 def delete_employee(id):
 
-    conn = sqlite3.connect("../database/employees.db")
+    conn = sqlite3.connect("database/employees.db")
 
     cursor = conn.cursor()
 
@@ -79,7 +79,7 @@ def update_employee(id):
     name = data["name"]
     department = data["department"]
 
-    conn = sqlite3.connect("../database/employees.db")
+    conn = sqlite3.connect("database/employees.db")
 
     cursor = conn.cursor()
 
