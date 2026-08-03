@@ -78,7 +78,7 @@ const updateEmployee = (employee) => {
 
   return (
     <div style={{ padding: "20px", fontFamily: "Arial" }}>
-      <h1>Employee Management System</h1>
+      <h1>Employee Management System V2</h1>
       
       <EmployeeForm
   name={name}
