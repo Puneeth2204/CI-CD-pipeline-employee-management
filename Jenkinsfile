@@ -15,6 +15,28 @@ pipeline {
             }
         }
 
+	stage('Push Images to Docker Hub') {
+    steps {
+        withCredentials([usernamePassword(
+            credentialsId: 'dockerhub',
+            usernameVariable: 'DOCKER_USER',
+            passwordVariable: 'DOCKER_PASS'
+        )]) {
+            sh '''
+                echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin
+
+                docker tag employee-management-pipeline-frontend:latest $DOCKER_USER/employee-frontend:latest
+                docker tag employee-management-pipeline-backend:latest $DOCKER_USER/employee-backend:latest
+
+                docker push $DOCKER_USER/employee-frontend:latest
+                docker push $DOCKER_USER/employee-backend:latest
+
+                docker logout
+            '''
+        }
+    }
+}
+
         stage('Stop Existing Containers') {
             steps {
                 sh 'docker compose down || true'
