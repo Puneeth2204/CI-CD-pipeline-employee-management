@@ -22,3 +22,4 @@ This project demonstrates a complete DevOps workflow by building, containerizing
 - Project initialized
 - Flask backend created
 - REST API implemented
+
