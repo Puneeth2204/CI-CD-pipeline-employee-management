@@ -25,7 +25,7 @@ const addEmployee = () => {
       department: department,
     })
     .then(() => {
-      return axios.get("http://3.110.197.155:5000/employees");
+      return API.get("/employees");
     })
     .then((response) => {
       setEmployees(response.data);
@@ -40,7 +40,7 @@ const addEmployee = () => {
 const deleteEmployee = (id) => {
   API.delete(`/employees/${id}`)
     .then(() => {
-      return axios.get("http://3.110.197.155:5000/employees");
+      return API.get("/employees");
     })
     .then((response) => {
       setEmployees(response.data);
